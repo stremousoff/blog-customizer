@@ -3,7 +3,6 @@ import arrow from 'src/images/arrow.svg';
 import styles from './ArrowButton.module.scss';
 import clsx from 'clsx';
 import { Fragment } from 'react';
-import { ArticleParamsForm } from 'components/article-params-form';
 
 /** Функция для обработки открытия/закрытия формы */
 export type OnClick = () => void;
