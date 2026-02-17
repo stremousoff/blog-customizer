@@ -1,6 +1,6 @@
 import { ArrowButton } from 'src/ui/arrow-button';
 import { Button } from 'src/ui/button';
-import React, { Fragment, useState } from 'react';
+import React, { Fragment, useEffect, useRef, useState } from 'react';
 
 import styles from './ArticleParamsForm.module.scss';
 import clsx from 'clsx';
@@ -36,6 +36,31 @@ export const ArticleParamsForm = ({ onApply, onReset }: Props) => {
 		}));
 	};
 
+	const asideRef = useRef<HTMLElement | null>(null);
+
+	useEffect(() => {
+		if (!isOpen) return;
+
+		const onKeyDown = (e: KeyboardEvent) => {
+			if (e.key === 'Escape') setIsOpen(false);
+		};
+
+		const onMouseDown = (e: MouseEvent) => {
+			const target = e.target as Node;
+			if (asideRef.current && !asideRef.current.contains(target)) {
+				setIsOpen(false);
+			}
+		};
+
+		document.addEventListener('keydown', onKeyDown);
+		document.addEventListener('mousedown', onMouseDown);
+
+		return () => {
+			document.removeEventListener('keydown', onKeyDown);
+			document.removeEventListener('mousedown', onMouseDown);
+		};
+	}, [isOpen]);
+
 	return (
 		<Fragment>
 			<ArrowButton
@@ -43,6 +68,7 @@ export const ArticleParamsForm = ({ onApply, onReset }: Props) => {
 				onClick={() => setIsOpen((prevState) => !prevState)}
 			/>
 			<aside
+				ref={asideRef}
 				className={clsx(styles.container, { [styles.container_open]: isOpen })}>
 				<form
 					className={styles.form}
